@@ -1,1 +1,1 @@
-a project for education only
+a project for education purpose only
