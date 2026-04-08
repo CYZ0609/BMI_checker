@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "736876387284",
+    "firebase_url": "https://attendance-system-59efd-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "attendance-system-59efd",
+    "storage_bucket": "attendance-system-59efd.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:736876387284:android:53578fe7692f84519f5441",
+        "android_client_info": {
+          "package_name": "com.example.bmi_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDeVD2rBB8Uj3r5U7pmPA4GCMz0YQzee9c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
