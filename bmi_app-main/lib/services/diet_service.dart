@@ -137,13 +137,15 @@ class DietService {
         FoodItem(name: 'Peanut Butter',          calories: 588, protein: 25,  fat: 50,  carbs: 20,  tip: 'Calorie-dense and easy to add to meals.'),
       ],
       'Normal': [
-        // ... （保持你原来的数据即可，篇幅原因我简写了）
-        FoodItem(name: 'Oatmeal', calories: 68, protein: 2.4, fat: 1.4, carbs: 12, tip: 'Keeps you full longer.'),
-        FoodItem(name: 'Grilled Salmon', calories: 208, protein: 20, fat: 13, carbs: 0, tip: 'Rich in omega-3.'),
-        FoodItem(name: 'Banana', calories: 89, protein: 1.1, fat: 0.3, carbs: 23, tip: 'Natural energy.'),
-        FoodItem(name: 'Greek Yogurt', calories: 59, protein: 10, fat: 0.4, carbs: 3.6, tip: 'High protein.'),
-        FoodItem(name: 'Broccoli', calories: 34, protein: 2.8, fat: 0.4, carbs: 7, tip: 'High in fibre.'),
-      ],
+        FoodItem(name: 'Oatmeal',           calories: 68,  protein: 2.4, fat: 1.4, carbs: 12,  tip: 'Keeps you full longer.'),
+        FoodItem(name: 'Grilled Salmon',    calories: 208, protein: 20,  fat: 13,  carbs: 0,   tip: 'Rich in omega-3 for heart health.'),
+        FoodItem(name: 'Banana',            calories: 89,  protein: 1.1, fat: 0.3, carbs: 23,  tip: 'Natural energy boost.'),
+        FoodItem(name: 'Greek Yogurt',      calories: 59,  protein: 10,  fat: 0.4, carbs: 3.6, tip: 'High protein, good for gut health.'),
+        FoodItem(name: 'Broccoli',          calories: 34,  protein: 2.8, fat: 0.4, carbs: 7,   tip: 'High in fibre and vitamins.'),
+        FoodItem(name: 'Whole Wheat Bread', calories: 247, protein: 13,  fat: 3.4, carbs: 41,  tip: 'More fibre than white bread.'),
+        FoodItem(name: 'Apple',             calories: 52,  protein: 0.3, fat: 0.2, carbs: 14,  tip: 'Low calorie snack rich in fibre.'),
+        FoodItem(name: 'Tofu',              calories: 76,  protein: 8,   fat: 4.8, carbs: 1.9, tip: 'Plant-based protein, low in fat.'),
+        ],
       'Overweight': [
         FoodItem(name: 'Steamed Broccoli', calories: 34, protein: 2.8, fat: 0.4, carbs: 7, tip: 'Low calorie.'),
         FoodItem(name: 'Grilled Chicken', calories: 165, protein: 31, fat: 3.6, carbs: 0, tip: 'Lean protein.'),
