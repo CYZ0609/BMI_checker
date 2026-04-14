@@ -18,12 +18,11 @@ class _ResultScreenState extends State<ResultScreen> {
   @override
   void initState() {
     super.initState();
-    // 页面打开时立刻存记录
     _saveRecord();
   }
 
   Future<void> _saveRecord() async {
-    if (_saved) return; // 防止重复存
+    if (_saved) return;
     final record = context.read<BmiProvider>().currentRecord;
     if (record != null) {
       await StorageService.saveRecord(record);
@@ -31,10 +30,9 @@ class _ResultScreenState extends State<ResultScreen> {
     }
   }
 
-  // 关闭结果页并切换到指定 tab
   void _goToTab(int index) {
     context.read<BmiProvider>().switchTab(index);
-    Navigator.pop(context); // 关掉结果页，回到主页
+    Navigator.pop(context);
   }
 
   @override
@@ -58,7 +56,6 @@ class _ResultScreenState extends State<ResultScreen> {
           children: [
             const SizedBox(height: 16),
 
-            // BMI 仪表盘
             BmiGauge(bmi: record.bmi),
 
             const SizedBox(height: 40),
@@ -71,11 +68,11 @@ class _ResultScreenState extends State<ResultScreen> {
             ),
             const SizedBox(height: 16),
 
-            // 饮食推荐按钮 → 跳到 tab index 1
+            // Diet → index 2（因为 Goal tab 插在 index 1）
             SizedBox(
               width: double.infinity,
               child: ElevatedButton.icon(
-                onPressed: () => _goToTab(1),
+                onPressed: () => _goToTab(2),
                 icon: const Icon(Icons.restaurant),
                 label: const Text('View Diet Recommendations'),
                 style: ElevatedButton.styleFrom(
@@ -91,11 +88,11 @@ class _ResultScreenState extends State<ResultScreen> {
 
             const SizedBox(height: 12),
 
-            // 运动推荐按钮 → 跳到 tab index 2
+            // Exercise → index 3
             SizedBox(
               width: double.infinity,
               child: ElevatedButton.icon(
-                onPressed: () => _goToTab(2),
+                onPressed: () => _goToTab(3),
                 icon: const Icon(Icons.fitness_center),
                 label: const Text('View Exercise Recommendations'),
                 style: ElevatedButton.styleFrom(
@@ -111,11 +108,11 @@ class _ResultScreenState extends State<ResultScreen> {
 
             const SizedBox(height: 12),
 
-            // 历史记录按钮 → 跳到 tab index 3
+            // History → index 4
             SizedBox(
               width: double.infinity,
               child: OutlinedButton.icon(
-                onPressed: () => _goToTab(3),
+                onPressed: () => _goToTab(4),
                 icon: const Icon(Icons.history),
                 label: const Text('View History'),
                 style: OutlinedButton.styleFrom(

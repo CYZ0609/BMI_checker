@@ -18,24 +18,20 @@ class _BmiScreenState extends State<BmiScreen> {
 
   @override
   void dispose() {
-    // 页面销毁时清理 controller，防止内存泄漏
     _heightController.dispose();
     _weightController.dispose();
     super.dispose();
   }
 
   void _onCalculate() {
-    // 检查所有 TextFormField 的 validator 是否都通过
     if (!_formKey.currentState!.validate()) return;
 
     final double height = double.parse(_heightController.text);
     final double weight = double.parse(_weightController.text);
 
-    // 把数值传给 Provider，Provider 会算好 BMI 并通知所有页面
-    // listen: false 因为我们只是"写入"，不需要监听变化
+
     context.read<BmiProvider>().calculateAndSet(height, weight);
 
-    // 跳到结果页
     Navigator.push(
       context,
       MaterialPageRoute(builder: (_) => const ResultScreen()),
@@ -51,7 +47,7 @@ class _BmiScreenState extends State<BmiScreen> {
         backgroundColor: const Color(0xFF1D9E75),
         foregroundColor: Colors.white,
       ),
-      body: SingleChildScrollView( // 避免键盘弹起时内容被遮住
+      body: SingleChildScrollView( 
         padding: const EdgeInsets.all(24),
         child: Form(
           key: _formKey,
@@ -60,7 +56,6 @@ class _BmiScreenState extends State<BmiScreen> {
             children: [
               const SizedBox(height: 24),
 
-              // 顶部图示
               const Icon(Icons.monitor_weight_outlined, size: 72, color: Color(0xFF1D9E75)),
               const SizedBox(height: 8),
               const Text(
@@ -71,7 +66,6 @@ class _BmiScreenState extends State<BmiScreen> {
 
               const SizedBox(height: 36),
 
-              // 身高输入
               TextFormField(
                 controller: _heightController,
                 keyboardType: const TextInputType.numberWithOptions(decimal: true),
@@ -85,13 +79,12 @@ class _BmiScreenState extends State<BmiScreen> {
                   if (value == null || value.isEmpty) return 'Please enter your height';
                   final h = double.tryParse(value);
                   if (h == null || h < 50 || h > 250) return 'Enter a valid height (50–250 cm)';
-                  return null; // null 表示验证通过
+                  return null; 
                 },
               ),
 
               const SizedBox(height: 16),
 
-              // 体重输入
               TextFormField(
                 controller: _weightController,
                 keyboardType: const TextInputType.numberWithOptions(decimal: true),
@@ -111,7 +104,6 @@ class _BmiScreenState extends State<BmiScreen> {
 
               const SizedBox(height: 32),
 
-              // 计算按钮
               ElevatedButton(
                 onPressed: _onCalculate,
                 style: ElevatedButton.styleFrom(

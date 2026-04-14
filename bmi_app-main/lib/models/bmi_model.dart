@@ -1,31 +1,32 @@
-// 这是一个纯数据类（Model）
-// 定义"一条 BMI 记录"长什么样
-// 所有人都可能用到这个文件，不要随便改
+import 'goal_model.dart';
 
 class BmiRecord {
-  final double bmi;         // BMI 数值，例如 22.5
-  final String category;    // 类别：Underweight / Normal / Overweight / Obese
-  final DateTime date;      // 记录的时间（Student 4 的历史页会用）
+  final double bmi;
+  final String category;
+  final DateTime date;
+  final String? goal; // 新增：记录当时的目标（可为空，兼容旧记录）
 
   BmiRecord({
     required this.bmi,
     required this.category,
     required this.date,
+    this.goal,
   });
 
-  // 把一条记录转成 String，方便存进 SharedPreferences
-  // 格式："22.5|Normal|2024-01-15T10:30:00"
+  // 存储格式：22.5|Normal|2024-01-15T10:30:00|Lose Weight
+  // 旧格式没有第4段，读取时兼容处理
   String toStorageString() {
-    return '$bmi|$category|${date.toIso8601String()}';
+    final goalStr = goal ?? '';
+    return '$bmi|$category|${date.toIso8601String()}|$goalStr';
   }
 
-  // 把 String 转回 BmiRecord（Student 4 读历史记录时用）
   factory BmiRecord.fromStorageString(String s) {
     final parts = s.split('|');
     return BmiRecord(
-      bmi: double.parse(parts[0]),
+      bmi:      double.parse(parts[0]),
       category: parts[1],
-      date: DateTime.parse(parts[2]),
+      date:     DateTime.parse(parts[2]),
+      goal:     parts.length > 3 && parts[3].isNotEmpty ? parts[3] : null,
     );
   }
 }

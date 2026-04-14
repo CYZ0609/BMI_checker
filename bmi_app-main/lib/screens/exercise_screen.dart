@@ -23,10 +23,12 @@ class _ExerciseScreenState extends State<ExerciseScreen> {
   }
 
   void _load() {
-    final cat = context.read<BmiProvider>().currentCategory ?? 'Normal';
-    _lastCategory = cat;
-    _future = ExerciseService.getRecommendations(cat);
-  }
+  final provider = context.read<BmiProvider>();
+  final cat  = provider.currentCategory ?? 'Normal';
+  final goal = provider.goal;
+  _lastCategory = cat;
+  _future = ExerciseService.getRecommendations(cat, goal: goal);
+}
 
   Map<String, dynamic> _info(String? cat) {
     switch (cat) {
@@ -107,7 +109,6 @@ class _ExerciseScreenState extends State<ExerciseScreen> {
       body: Column(
         children: [
 
-          // ── 顶部说明卡 ────────────────────────────────────────
           Container(
             width: double.infinity,
             color: info['bg'] as Color,
@@ -133,7 +134,6 @@ class _ExerciseScreenState extends State<ExerciseScreen> {
             ),
           ),
 
-          // ── 副标题 ────────────────────────────────────────────
           Container(
             width: double.infinity,
             color: Colors.white,
@@ -146,7 +146,6 @@ class _ExerciseScreenState extends State<ExerciseScreen> {
             ),
           ),
 
-          // ── 运动列表 ──────────────────────────────────────────
           Expanded(
             child: FutureBuilder<List<ExerciseItem>>(
               future: _future,
@@ -182,7 +181,6 @@ class _ExerciseScreenState extends State<ExerciseScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
 
-            // 运动名 + 类别标签
             Row(
               children: [
                 Container(
@@ -205,7 +203,6 @@ class _ExerciseScreenState extends State<ExerciseScreen> {
                     ],
                   ),
                 ),
-                // 组数 × 次数
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                   decoration: BoxDecoration(
@@ -223,7 +220,6 @@ class _ExerciseScreenState extends State<ExerciseScreen> {
 
             const SizedBox(height: 10),
 
-            // 动作说明（关键，清晰英文）
             Container(
               width: double.infinity,
               padding: const EdgeInsets.all(10),

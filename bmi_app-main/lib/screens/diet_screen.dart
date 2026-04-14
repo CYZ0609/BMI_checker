@@ -23,12 +23,13 @@ class _DietScreenState extends State<DietScreen> {
   }
 
   void _load() {
-    final cat = context.read<BmiProvider>().currentCategory ?? 'Normal';
+    final provider = context.read<BmiProvider>();
+    final cat  = provider.currentCategory ?? 'Normal';
+    final goal = provider.goal;
     _lastCategory = cat;
-    _future = DietService.getRecommendations(cat);
+    _future = DietService.getRecommendations(cat, goal: goal); // 传入 goal
   }
 
-  // 每个类别对应的颜色、标题、说明
   Map<String, dynamic> _info(String? cat) {
     switch (cat) {
       case 'Underweight':
@@ -96,7 +97,6 @@ class _DietScreenState extends State<DietScreen> {
       body: Column(
         children: [
 
-          // ── 顶部说明卡 ────────────────────────────────────────
           Container(
             width: double.infinity,
             color: info['bg'] as Color,
@@ -122,7 +122,31 @@ class _DietScreenState extends State<DietScreen> {
             ),
           ),
 
-          // ── 副标题 ────────────────────────────────────────────
+          // 新增的 Goal 显示模块，放在顶部横幅下面
+          if (context.watch<BmiProvider>().goal != null)
+            Container(
+              width: double.infinity,
+              color: Colors.white,
+              padding: const EdgeInsets.fromLTRB(16, 0, 16, 10),
+              child: Row(
+                children: [
+                  Text(
+                    context.watch<BmiProvider>().goal!.emoji,
+                    style: const TextStyle(fontSize: 16),
+                  ),
+                  const SizedBox(width: 6),
+                  Text(
+                    'Goal: ${context.watch<BmiProvider>().goal!.label}',
+                    style: TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.grey.shade700,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
           Container(
             width: double.infinity,
             color: Colors.white,
@@ -135,7 +159,6 @@ class _DietScreenState extends State<DietScreen> {
             ),
           ),
 
-          // ── 食物列表 ──────────────────────────────────────────
           Expanded(
             child: FutureBuilder<List<FoodItem>>(
               future: _future,
@@ -183,7 +206,6 @@ class _DietScreenState extends State<DietScreen> {
               ],
             ),
 
-            // 推荐原因（最重要的部分）
             if (food.tip.isNotEmpty) ...[
               const SizedBox(height: 6),
               Container(

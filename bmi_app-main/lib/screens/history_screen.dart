@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
+import '../models/goal_model.dart';
 import '../models/bmi_model.dart';
 import '../providers/bmi_provider.dart';
 import '../services/storage_service.dart';
@@ -16,8 +16,6 @@ class _HistoryScreenState extends State<HistoryScreen> {
   List<BmiRecord> _records = [];
   bool _loading = true;
 
-  // 记住上一次看到的 BMI 记录
-  // 当 provider 里的 currentRecord 变了，就知道有新数据，马上刷新
   BmiRecord? _lastSeenRecord;
 
   @override
@@ -81,11 +79,9 @@ class _HistoryScreenState extends State<HistoryScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // ── 关键修复：监听 provider，有新 BMI 就马上刷新历史 ──────────
     final currentRecord = context.watch<BmiProvider>().currentRecord;
     if (currentRecord != null && currentRecord != _lastSeenRecord) {
       _lastSeenRecord = currentRecord;
-      // addPostFrameCallback 避免在 build 里直接调用 setState
       WidgetsBinding.instance.addPostFrameCallback((_) => _loadHistory());
     }
 
@@ -128,7 +124,6 @@ class _HistoryScreenState extends State<HistoryScreen> {
     );
   }
 
-  // ── 空状态 ───────────────────────────────────────────────────
   Widget _buildEmpty() {
     return Center(
       child: Column(
@@ -146,7 +141,6 @@ class _HistoryScreenState extends State<HistoryScreen> {
     );
   }
 
-  // ── 三格统计卡 ───────────────────────────────────────────────
   Widget _buildStats() {
     final stats = StorageService.getStats(_records);
     return Row(
@@ -178,7 +172,6 @@ class _HistoryScreenState extends State<HistoryScreen> {
     );
   }
 
-  // ── 趋势柱状图 ───────────────────────────────────────────────
   Widget _buildChart() {
     final recent = _records.take(10).toList().reversed.toList();
     return Container(
@@ -239,55 +232,68 @@ class _HistoryScreenState extends State<HistoryScreen> {
     );
   }
 
-  // ── 每条记录 ─────────────────────────────────────────────────
   Widget _buildRecordCard(BmiRecord record) {
-    final color = _bmiColor(record.bmi);
-    final bg    = _bmiBgColor(record.bmi);
-    return Container(
-      margin: const EdgeInsets.only(bottom: 8),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: Colors.grey.shade200),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-        child: Row(
-          children: [
-            // BMI 数字圆圈
-            Container(
-              width: 52, height: 52,
-              decoration: BoxDecoration(color: bg, shape: BoxShape.circle),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(record.bmi.toStringAsFixed(1),
-                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: color)),
-                  Text('BMI', style: TextStyle(fontSize: 9, color: color)),
-                ],
-              ),
-            ),
-            const SizedBox(width: 14),
-            // 类别 + 时间
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(record.category,
-                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: color)),
-                  const SizedBox(height: 3),
-                  Text(_formatDate(record.date),
-                    style: TextStyle(fontSize: 12, color: Colors.grey.shade500)),
-                ],
-              ),
-            ),
-            Container(
-              width: 10, height: 10,
-              decoration: BoxDecoration(color: color, shape: BoxShape.circle),
-            ),
-          ],
-        ),
-      ),
-    );
+  final color = _bmiColor(record.bmi);
+  final bg    = _bmiBgColor(record.bmi);
+
+  // 找出目标的 emoji
+  String goalDisplay = '';
+  if (record.goal != null) {
+    final g = UserGoalExtension.fromString(record.goal!);
+    if (g != null) goalDisplay = '${g.emoji} ${g.label}';
   }
+
+  return Container(
+    margin: const EdgeInsets.only(bottom: 8),
+    decoration: BoxDecoration(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(10),
+      border: Border.all(color: Colors.grey.shade200),
+    ),
+    child: Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+      child: Row(
+        children: [
+          // BMI 圆圈
+          Container(
+            width: 52, height: 52,
+            decoration: BoxDecoration(color: bg, shape: BoxShape.circle),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(record.bmi.toStringAsFixed(1),
+                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: color)),
+                Text('BMI', style: TextStyle(fontSize: 9, color: color)),
+              ],
+            ),
+          ),
+          const SizedBox(width: 14),
+          // 类别 + 目标 + 时间
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(record.category,
+                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: color)),
+                // 显示目标（如果有）
+                if (goalDisplay.isNotEmpty) ...[
+                  const SizedBox(height: 2),
+                  Text(goalDisplay,
+                    style: TextStyle(fontSize: 12, color: Colors.grey.shade600)),
+                ],
+                const SizedBox(height: 3),
+                Text(_formatDate(record.date),
+                  style: TextStyle(fontSize: 12, color: Colors.grey.shade500)),
+              ],
+            ),
+          ),
+          Container(
+            width: 10, height: 10,
+            decoration: BoxDecoration(color: color, shape: BoxShape.circle),
+          ),
+        ],
+      ),
+    ),
+  );
+}
 }

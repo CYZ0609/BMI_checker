@@ -18,8 +18,6 @@ class BmiGauge extends StatelessWidget {
     return 'Obese';
   }
 
-  // BMI 范围 10 → 40，共 30 个单位
-  // 位置 = (bmi - 10) / 30，限制在 0.0 ~ 1.0 之间
   double get _ratio => ((bmi - 10) / 30).clamp(0.0, 1.0);
 
   @override
@@ -46,23 +44,14 @@ class BmiGauge extends StatelessWidget {
 
         const SizedBox(height: 28),
 
-        // ── 颜色条 + 箭头 ─────────────────────────────────────────
-        // LayoutBuilder 拿到颜色条的真实宽度，箭头才能准确定位
         LayoutBuilder(
           builder: (context, constraints) {
             final barWidth = constraints.maxWidth;
 
-            // 颜色条4段的比例（按真实 BMI 区间）
-            // 总范围 10~40 = 30 单位
-            // 偏瘦 10~18.5 = 8.5 单位 → flex 85
-            // 正常 18.5~25 = 6.5 单位 → flex 65
-            // 超重 25~30   = 5.0 单位 → flex 50
-            // 肥胖 30~40   = 10  单位 → flex 100
             final arrowLeft = (_ratio * barWidth).clamp(6.0, barWidth - 6.0);
 
             return Column(
               children: [
-                // 箭头（在颜色条上方）
                 Stack(
                   children: [
                     SizedBox(width: barWidth, height: 20),
@@ -78,7 +67,6 @@ class BmiGauge extends StatelessWidget {
                   ],
                 ),
 
-                // 颜色条（比例对应真实 BMI 区间）
                 ClipRRect(
                   borderRadius: BorderRadius.circular(6),
                   child: Row(
@@ -91,7 +79,6 @@ class BmiGauge extends StatelessWidget {
                   ),
                 ),
 
-                // 刻度标注
                 const SizedBox(height: 4),
                 Row(
                   children: const [
