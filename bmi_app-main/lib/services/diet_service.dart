@@ -1,3 +1,5 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import '../models/food_model.dart';
 import '../models/goal_model.dart';
 import 'dart:convert';
