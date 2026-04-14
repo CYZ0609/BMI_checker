@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
+import '../models/goal_model.dart';
 import '../providers/bmi_provider.dart';
 import '../models/exercise_model.dart';
 import '../services/exercise_service.dart';
@@ -15,6 +15,7 @@ class ExerciseScreen extends StatefulWidget {
 class _ExerciseScreenState extends State<ExerciseScreen> {
   late Future<List<ExerciseItem>> _future;
   String? _lastCategory;
+  UserGoal? _lastGoal;
 
   @override
   void initState() {
@@ -27,6 +28,7 @@ class _ExerciseScreenState extends State<ExerciseScreen> {
   final cat  = provider.currentCategory ?? 'Normal';
   final goal = provider.goal;
   _lastCategory = cat;
+  _lastGoal = goal;
   _future = ExerciseService.getRecommendations(cat, goal: goal);
 }
 
@@ -90,8 +92,9 @@ class _ExerciseScreenState extends State<ExerciseScreen> {
   @override
   Widget build(BuildContext context) {
     final cat = context.watch<BmiProvider>().currentCategory;
+    final goal = context.watch<BmiProvider>().goal; // 获取当前目标
 
-    if (cat != null && cat != _lastCategory) {
+    if ((cat != null && cat != _lastCategory) || (goal != _lastGoal)) {
       WidgetsBinding.instance.addPostFrameCallback((_) => setState(_load));
     }
 

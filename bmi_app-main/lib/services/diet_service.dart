@@ -6,7 +6,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class DietService {
-  static const String _apiKey = 'YOUR_USDA_KEY_HERE';
+  static const String _apiKey = 'API'; // USDA API Key
 
   // 主方法：同时接收 BMI 类别和目标
   static Future<List<FoodItem>> getRecommendations(

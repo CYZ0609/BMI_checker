@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
+import '../models/goal_model.dart'; 
 import '../providers/bmi_provider.dart';
 import '../models/food_model.dart';
 import '../services/diet_service.dart';
@@ -15,6 +15,7 @@ class DietScreen extends StatefulWidget {
 class _DietScreenState extends State<DietScreen> {
   late Future<List<FoodItem>> _future;
   String? _lastCategory;
+  UserGoal? _lastGoal; // 1. 新增：记录上一次的目标
 
   @override
   void initState() {
@@ -26,8 +27,11 @@ class _DietScreenState extends State<DietScreen> {
     final provider = context.read<BmiProvider>();
     final cat  = provider.currentCategory ?? 'Normal';
     final goal = provider.goal;
+    
     _lastCategory = cat;
-    _future = DietService.getRecommendations(cat, goal: goal); // 传入 goal
+    _lastGoal = goal; // 2. 新增：每次加载时保存当前目标
+    
+    _future = DietService.getRecommendations(cat, goal: goal); 
   }
 
   Map<String, dynamic> _info(String? cat) {
@@ -78,8 +82,10 @@ class _DietScreenState extends State<DietScreen> {
   @override
   Widget build(BuildContext context) {
     final cat = context.watch<BmiProvider>().currentCategory;
+    final goal = context.watch<BmiProvider>().goal; // 获取当前目标
 
-    if (cat != null && cat != _lastCategory) {
+    // 3. 只要 BMI 变了，或者目标变了，就强制重新加载！
+    if ((cat != null && cat != _lastCategory) || (goal != _lastGoal)) {
       WidgetsBinding.instance.addPostFrameCallback((_) => setState(_load));
     }
 
