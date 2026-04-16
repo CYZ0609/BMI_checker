@@ -1,4 +1,3 @@
-import 'goal_model.dart';
 
 class BmiRecord {
   final double bmi;

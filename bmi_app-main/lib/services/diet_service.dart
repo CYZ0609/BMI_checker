@@ -2,11 +2,9 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import '../models/food_model.dart';
 import '../models/goal_model.dart';
-import 'dart:convert';
-import 'package:http/http.dart' as http;
 
 class DietService {
-  static const String _apiKey = 'API'; // USDA API Key
+  static const String _apiKey = 'sOcSxjGlAoSgOMixhIoUrjwrdjekqY0m4yfd28hy'; // USDA API Key
 
   // 主方法：同时接收 BMI 类别和目标
   static Future<List<FoodItem>> getRecommendations(
@@ -71,7 +69,7 @@ class DietService {
 
     final data  = jsonDecode(response.body) as Map<String, dynamic>;
     final foods = data['foods'] as List<dynamic>? ?? [];
-    final blackList = ['fast', 'cookie', 'cake', 'candy', 'fried', 'syrup', 'ice cream', 'burger'];
+    final blackList = ['fast', 'cookie', 'cake', 'candy', 'fried', 'syrup', 'ice cream', 'burger', 'baby food'];
 
     for (var f in foods) {
       final item      = _parse(f as Map<String, dynamic>);
